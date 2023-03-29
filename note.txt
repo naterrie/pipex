@@ -1,0 +1,2 @@
+access : return -1 si pas existant = access(char *path, F_OK)
+execve : Permet d'exec les commandes = execve(char *path, char *cmd, char **env)
