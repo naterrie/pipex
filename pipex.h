@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 13:20:04 by naterrie          #+#    #+#             */
-/*   Updated: 2023/03/29 03:47:06 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/03/29 20:57:37 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include <unistd.h>
 # include <fcntl.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 # include "./libft/libft.h"
 #include <stdio.h>
 
@@ -26,6 +28,6 @@ typedef struct pipex
 
 void	setpath(t_pipex	*pipex, char **env);
 
-int		ft_checkfile(char **argv);
+int		ft_checkfile(char **argv, int argc);
 
 #endif

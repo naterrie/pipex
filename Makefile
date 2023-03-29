@@ -6,13 +6,13 @@
 #    By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/06 13:19:29 by naterrie          #+#    #+#              #
-#    Updated: 2023/03/29 03:42:27 by naterrie         ###   ########lyon.fr    #
+#    Updated: 2023/03/29 20:52:54 by naterrie         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
 NAME =	pipex
 HEADERS = pipex.h
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = #-Wall -Werror -Wextra
 
 DIR_SRCS := src
 DIR_OBJS := .objs
