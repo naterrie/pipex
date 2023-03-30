@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:07:35 by naterrie          #+#    #+#             */
-/*   Updated: 2023/03/29 20:46:36 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/03/30 17:47:34 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	setpath(t_pipex	*pipex, char **env)
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
 		{
 			pipex->path = ft_substr(env[i], 5, ft_strlen(env[i]));
-			pipex->pathint = i;
+			//pipex->pathint = i;
 			return ;
 		}
 		i++;

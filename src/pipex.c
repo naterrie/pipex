@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 13:36:34 by naterrie          #+#    #+#             */
-/*   Updated: 2023/03/29 20:53:15 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/03/30 17:46:28 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	process_exec(char *cmd, char **argv, char **env)
 	pid_t	pid;
 
 	pid = fork();
+	if (pid == -1)
+		return ;
 	if (!pid)
 		execve(cmd, argv, env);
 	else
@@ -41,27 +43,29 @@ void	free_str(char **str)
 	free(str);
 }
 
-void	execute_cmd(t_pipex *pipex, char **argv, char **env, int argc)
+char	*get_path(char **env, char **argv, int a, t_pipex *pipex)
 {
 	char	**path_list;
 	char	*cmd;
+	char	*temp;
 	int		i;
 
-	(void)argc;
-	(void)env;
+
+	setpath(pipex, env);
 	path_list = ft_split(pipex->path, ':');
+	free(pipex->path);
 	i = 0;
 	while (path_list[i] != NULL)
 	{
-		if (access(path_list[i], X_OK) == 0)
+		temp = ft_strjoin(path_list[i], "/");
+		cmd = ft_strjoin(temp, argv[a]);
+		free(temp);
+		if (access(cmd, X_OK) == 0)
 		{
-			cmd = ft_strjoin(path_list[i], "/");
-			cmd = ft_strjoin(cmd, argv[2]);
 			free_str(path_list);
-			process_exec(cmd, argv, env);
-			free(cmd);
-			return ;
+			return (cmd);
 		}
+		free(cmd);
 		i++;
 	}
 	free_str(path_list);
@@ -70,13 +74,14 @@ void	execute_cmd(t_pipex *pipex, char **argv, char **env, int argc)
 int	main(int argc, char **argv, char **env)
 {
 	t_pipex	pipex;
+	char	*cmd;
 
 	if (argc < 5)
 		return (1);
 	if (ft_checkfile(argv, argc - 1) == 1)
 		return (1);
-	setpath(&pipex, env);
-	execute_cmd(&pipex, argv, env, argc);
-	free(pipex.path);
+	cmd = get_path(env, argv, 2, &pipex);
+	process_exec(cmd, argv, env);
+	free(cmd);
 	return (0);
 }
