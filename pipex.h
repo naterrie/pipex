@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 13:20:04 by naterrie          #+#    #+#             */
-/*   Updated: 2023/03/30 17:47:03 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/03/31 13:02:51 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 
 typedef struct pipex
 {
-
+	char	**cmd;
+	char	*path_cmd;
 	char	*path;
 }	t_pipex;
 

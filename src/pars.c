@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:07:35 by naterrie          #+#    #+#             */
-/*   Updated: 2023/03/30 17:47:34 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/03/31 17:17:12 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void	setpath(t_pipex	*pipex, char **env)
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
 		{
 			pipex->path = ft_substr(env[i], 5, ft_strlen(env[i]));
-			//pipex->pathint = i;
 			return ;
 		}
 		i++;
@@ -43,7 +42,7 @@ int	ft_checkfile(char **argv, int argc)
 	fd = open(argv[argc], O_RDONLY);
 	if (fd < 0)
 	{
-		fd = open(argv[argc], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		fd = open(argv[argc], O_CREAT, 0644);
 		if (fd < 0)
 			write(1, "ERROR\nOutput file", 17);
 		return (1);
