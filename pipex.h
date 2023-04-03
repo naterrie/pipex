@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 13:20:04 by naterrie          #+#    #+#             */
-/*   Updated: 2023/03/31 13:02:51 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/03/31 17:37:13 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include "./libft/libft.h"
-#include <stdio.h>
 
 typedef struct pipex
 {

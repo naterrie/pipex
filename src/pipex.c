@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 13:36:34 by naterrie          #+#    #+#             */
-/*   Updated: 2023/03/31 16:54:20 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/03 17:08:45 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,10 @@ void	free_str(char **str)
 	free(str);
 }
 
-void	set_cmd(t_pipex *pipex, char **args, char *list)
-{
-	char	*temp;
-
-	temp = ft_strjoin(list, "/");
-	pipex->path_cmd = ft_strjoin(temp, pipex->cmd[0]);
-	free(temp);
-}
-
-void	get_path(char **env, char **argv, int a, t_pipex *pipex, int j)
+void	get_path(char **env, char **argv, t_pipex *pipex, int j)
 {
 	char	**path_list;
+	char	*temp;
 	int		i;
 
 	setpath(pipex, env);
@@ -46,7 +38,9 @@ void	get_path(char **env, char **argv, int a, t_pipex *pipex, int j)
 	pipex->cmd = ft_split(argv[j], ' ');
 	while (path_list[i])
 	{
-		set_cmd(pipex, argv, path_list[i]);
+		temp = ft_strjoin(path_list[i], "/");
+		pipex->path_cmd = ft_strjoin(temp, pipex->cmd[0]);
+		free(temp);
 		if (access(pipex->path_cmd, X_OK) == 0)
 		{
 			free_str(path_list);
@@ -66,7 +60,7 @@ void	process_exec(t_pipex *pipex, char **argv, char **env, int i)
 
 	fdout = open(argv[4], O_WRONLY);
 	fd = open(argv[1], O_RDONLY);
-	get_path(env, argv, 2, pipex, i);
+	get_path(env, argv, pipex, i);
 	dup2(fd, 0);
 	dup2(fdout, 1);
 	pid = fork();
@@ -88,12 +82,19 @@ void	process_exec(t_pipex *pipex, char **argv, char **env, int i)
 int	main(int argc, char **argv, char **env)
 {
 	t_pipex	pipex;
+	int		file;
 
 	if (argc < 5)
 		return (1);
-	if (ft_checkfile(argv, argc - 1) == 1)
-		return (1);
-	process_exec(&pipex, argv, env, 2);
-	process_exec(&pipex, argv, env, 3);
+	file = ft_checkfile(argv, argc - 1);
+	if (file == 0)
+	{
+		process_exec(&pipex, argv, env, 2);
+		process_exec(&pipex, argv, env, 3);
+	}
+	else if (file == 1)
+		process_exec(&pipex, argv, env, 3);
+	else if (file == 2)
+		process_exec(&pipex, argv, env, 2);
 	return (0);
 }
