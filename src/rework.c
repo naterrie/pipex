@@ -1,27 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   rework.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/06 13:36:34 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/05 16:30:36 by naterrie         ###   ########lyon.fr   */
+/*   Created: 2023/04/10 12:20:00 by naterrie          #+#    #+#             */
+/*   Updated: 2023/04/10 16:21:57 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
-#include <stdio.h>
-
-void	ft_exit(t_pipex *pipex, int fdout, int fdin, int exitcode)
-{
-	free(pipex->path_cmd);
-	free_str(pipex->cmd);
-	close(fdin);
-	close(fdout);
-	if (exitcode == 1)
-		exit(0);
-}
 
 int	get_path(char **env, char **argv, t_pipex *pipex, int j)
 {
@@ -52,61 +41,55 @@ int	get_path(char **env, char **argv, t_pipex *pipex, int j)
 	return (1);
 }
 
-void	exec_cmd(t_pipex *pipex, char **env)
+pid_t	child_process(t_pipex *pipex, char **args, char **env, int i)
 {
 	pid_t	pid;
 
 	pid = fork();
 	if (pid == -1)
-		return ;
+		return (0);
+	(void)i;
+	(void)args;
 	if (!pid)
 	{
 		execve(pipex->path_cmd, pipex->cmd, env);
 		exit(0);
 	}
-	else
-		waitpid(pid, NULL, 0);
+	return (pid);
 }
 
-void	process_exec(t_pipex *pipex, char **argv, char **env, int i)
+void	process_exec(t_pipex *pipex, char **args, char **env, int i)
 {
-	int		fdin;
-	int		fdout;
-	int		the_pipe[2];
+	pid_t	pid;
+	int		j;
 
-	pipe(the_pipe);
-	fdout = open(argv[4], O_WRONLY);
-	fdin = open(argv[1], O_RDONLY);
-	if (get_path(env, argv, pipex, i) == 1)
+	j = 1;
+	if (pipex->fdin == -1)
+		i++;
+	else
+		dup2(pipex->fdin, 0);
+	if (pipex->fdout == -1)
+		j++;
+	else
+		dup2(pipex->fdout, 1);
+	while (args[i + j])
 	{
-		free_str(pipex->cmd);
-		return ;
+		if (get_path(env, args, pipex, i) == 0)
+			pid = child_process(pipex, args, env, i);
+		i++;
 	}
-	dup2(fdin, 0);
-	dup2(the_pipe[0], 1);
-	exec_cmd(pipex, env);
-	close(the_pipe[0]);
-	close(the_pipe[1]);
-	ft_exit(pipex, fdin, fdout, 0);
+	waitpid(pid, NULL, 0);
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	t_pipex	pipex;
-	int		file;
 
+	pipex.numbarg = argc;
+	ft_checkfile(argv, argc - 1, &pipex);
 	if (argc < 5)
 		return (1);
-	file = ft_checkfile(argv, argc - 1);
-	if (file == 0)
-	{
-		process_exec(&pipex, argv, env, 2);
-		process_exec(&pipex, argv, env, 3);
-	}
-	else if (file == 1)
-		process_exec(&pipex, argv, env, 3);
-	else if (file == 2)
-		process_exec(&pipex, argv, env, 2);
+	process_exec(&pipex, argv, env, argc - 3);
 	close(1);
 	close(0);
 	close(2);
