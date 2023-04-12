@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rework.c                                           :+:      :+:    :+:   */
+/*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 12:20:00 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/12 16:48:34 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/12 16:56:08 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ int	get_path(char **env, char **argv, t_pipex *pipex, int j)
 		i++;
 	}
 	write(1, "pipex: command not found\n", 25);
-	free_str(pipex->cmd);
 	free_str(path_list);
 	return (1);
 }
@@ -90,6 +89,8 @@ void	process_exec(t_pipex *pipex, char **args, char **env, int i)
 	{
 		if (get_path(env, args, pipex, i) == 0)
 			pid = child_process(pipex, env);
+		else
+			free_str(pipex->cmd);
 		i++;
 	}
 	waitpid(pid, NULL, 0);
