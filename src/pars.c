@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:07:35 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/10 16:29:18 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/12 15:16:43 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,6 @@ void	setpath(t_pipex	*pipex, char **env)
 int	ft_checkfile(char **argv, int argc, t_pipex *pipex)
 {
 	pipex->fdin = open(argv[1], O_RDONLY);
-
-	if (access(argv[argc], F_OK) == 0)
-	{
-		if (access(argv[argc], R_OK) == !0)
-		{
-			pipex->fdout = -1;
-			return (0);
-		}
-		unlink(argv[argc]);
-	}
-	pipex->fdout = open(argv[argc], O_CREAT, 0644);
+	pipex->fdout = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	return (0);
 }

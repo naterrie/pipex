@@ -6,7 +6,7 @@
 #    By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/06 13:19:29 by naterrie          #+#    #+#              #
-#    Updated: 2023/04/10 16:20:52 by naterrie         ###   ########lyon.fr    #
+#    Updated: 2023/04/12 16:50:56 by naterrie         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ RED := \033[31m
 RESET := \033[0m
 ERASE := \033[2K\033[1A\r
 
-SRCS =	rework.c \
+SRCS =	pipex.c \
 		pars.c
 
 all: $(NAME)
