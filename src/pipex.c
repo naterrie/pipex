@@ -6,24 +6,11 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 12:20:00 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/12 16:56:08 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/13 13:52:08 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
-
-void	ft_exit(t_pipex *pipex, int exitcode)
-{
-	if (exitcode == 1)
-	{
-		close(1);
-		close(0);
-		close(2);
-		close(pipex->fdin);
-		close(pipex->fdout);
-		exit(0);
-	}
-}
 
 int	get_path(char **env, char **argv, t_pipex *pipex, int j)
 {
@@ -54,7 +41,16 @@ int	get_path(char **env, char **argv, t_pipex *pipex, int j)
 	return (1);
 }
 
-pid_t	child_process(t_pipex *pipex, char **env)
+void	change_fd(t_pipex *pipex)
+{
+	close(pipex->pipefd[1]);
+	dup2(pipex->pipefd[0], 0);
+	close(pipex->pipefd[0]);
+	dup2(pipex->fdout, 1);
+	close(pipex->fdout);
+}
+
+pid_t	child_process(t_pipex *pipex, char **env, int i)
 {
 	pid_t	pid;
 
@@ -63,8 +59,16 @@ pid_t	child_process(t_pipex *pipex, char **env)
 		return (0);
 	if (!pid)
 	{
+		if (i == 2)
+		{
+			close(pipex->pipefd[0]);
+			dup2(pipex->pipefd[1], 1);
+			close(pipex->pipefd[1]);
+		}
+		else
+			change_fd(pipex);
 		execve(pipex->path_cmd, pipex->cmd, env);
-		exit(0);
+		exit(1);
 	}
 	free(pipex->path_cmd);
 	free_str(pipex->cmd);
@@ -77,22 +81,26 @@ void	process_exec(t_pipex *pipex, char **args, char **env, int i)
 	int		j;
 
 	j = 1;
+	if (pipe(pipex->pipefd) == -1)
+		exit(0);
 	if (pipex->fdin == -1)
 		i++;
 	else
 		dup2(pipex->fdin, 0);
 	if (pipex->fdout == -1)
 		j++;
-	else
-		dup2(pipex->fdout, 1);
 	while (args[i + j])
 	{
 		if (get_path(env, args, pipex, i) == 0)
-			pid = child_process(pipex, env);
+			pid = child_process(pipex, env, i);
 		else
 			free_str(pipex->cmd);
 		i++;
 	}
+	close(pipex->pipefd[0]);
+	close(pipex->pipefd[1]);
+	close(0);
+	waitpid(pid -1, NULL, 0);
 	waitpid(pid, NULL, 0);
 }
 
@@ -104,5 +112,7 @@ int	main(int argc, char **argv, char **env)
 		return (1);
 	ft_checkfile(argv, argc, &pipex);
 	process_exec(&pipex, argv, env, argc - 3);
-	ft_exit(&pipex, 1);
+	close(pipex.pipefd[0]);
+	close(pipex.pipefd[1]);
+	ft_exit(&pipex);
 }

@@ -6,12 +6,22 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:07:35 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/12 15:16:43 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/12 17:06:41 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 #include <stdio.h>
+
+void	ft_exit(t_pipex *pipex)
+{
+	close(1);
+	close(0);
+	close(2);
+	close(pipex->fdin);
+	close(pipex->fdout);
+	exit(0);
+}
 
 void	setpath(t_pipex	*pipex, char **env)
 {
