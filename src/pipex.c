@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 12:20:00 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/13 13:52:08 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/13 14:46:16 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ void	change_fd(t_pipex *pipex)
 	dup2(pipex->pipefd[0], 0);
 	close(pipex->pipefd[0]);
 	dup2(pipex->fdout, 1);
-	close(pipex->fdout);
+	if (pipex->fdout != 1)
+		close(pipex->fdout);
 }
 
 pid_t	child_process(t_pipex *pipex, char **env, int i)
@@ -111,8 +112,14 @@ int	main(int argc, char **argv, char **env)
 	if (argc != 5)
 		return (1);
 	ft_checkfile(argv, argc, &pipex);
-	process_exec(&pipex, argv, env, argc - 3);
-	close(pipex.pipefd[0]);
-	close(pipex.pipefd[1]);
-	ft_exit(&pipex);
+	if (pipex.fdin != -1 && pipex.fdout != -1)
+	{
+		process_exec(&pipex, argv, env, argc - 3);
+		close(pipex.pipefd[0]);
+		close(pipex.pipefd[1]);
+	}
+	if (pipex.fdin != -1)
+		close(pipex.fdin);
+	if (pipex.fdout != -1)
+		close (pipex.fdout);
 }
