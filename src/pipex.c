@@ -6,18 +6,26 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 12:20:00 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/13 14:46:16 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/19 17:04:01 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
+#include <stdio.h>
+
 int	get_path(char **env, char **argv, t_pipex *pipex, int j)
 {
 	char	**path_list;
-	char	*temp;
 	int		i;
 
+	if (ft_strchr(argv[j], '/') != NULL || ft_strlen(argv[j]) == 0)
+	{
+		if (access(argv[j], X_OK) == 0)
+			return (0);
+		write(1, "pipex: command not found\n", 25);
+		return (2);
+	}
 	setpath(pipex, env);
 	path_list = ft_split(pipex->path, ':');
 	free(pipex->path);
@@ -25,15 +33,8 @@ int	get_path(char **env, char **argv, t_pipex *pipex, int j)
 	pipex->cmd = ft_split(argv[j], ' ');
 	while (path_list[i])
 	{
-		temp = ft_strjoin(path_list[i], "/");
-		pipex->path_cmd = ft_strjoin(temp, pipex->cmd[0]);
-		free(temp);
-		if (access(pipex->path_cmd, X_OK) == 0)
-		{
-			free_str(path_list);
+		if (try_to_access(pipex, path_list, i) == 0)
 			return (0);
-		}
-		free(pipex->path_cmd);
 		i++;
 	}
 	write(1, "pipex: command not found\n", 25);
@@ -80,8 +81,10 @@ void	process_exec(t_pipex *pipex, char **args, char **env, int i)
 {
 	pid_t	pid;
 	int		j;
+	int		k;
 
 	j = 1;
+	pid = 0;
 	if (pipe(pipex->pipefd) == -1)
 		exit(0);
 	if (pipex->fdin == -1)
@@ -92,17 +95,14 @@ void	process_exec(t_pipex *pipex, char **args, char **env, int i)
 		j++;
 	while (args[i + j])
 	{
-		if (get_path(env, args, pipex, i) == 0)
+		k = get_path(env, args, pipex, i);
+		if (k == 0)
 			pid = child_process(pipex, env, i);
-		else
+		else if (k == 1)
 			free_str(pipex->cmd);
 		i++;
 	}
-	close(pipex->pipefd[0]);
-	close(pipex->pipefd[1]);
-	close(0);
-	waitpid(pid -1, NULL, 0);
-	waitpid(pid, NULL, 0);
+	end_process(pipex, pid);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -110,8 +110,15 @@ int	main(int argc, char **argv, char **env)
 	t_pipex	pipex;
 
 	if (argc != 5)
+	{
+		write (1, "pipex : wrong number of arguments\n", 35);
 		return (1);
+	}
 	ft_checkfile(argv, argc, &pipex);
+	if (pipex.fdin == -1)
+		write(1, "pipex : input file invalid\n", 27);
+	if (pipex.fdout == -1)
+		write(1, "pipex : output file invalid\n", 28);
 	if (pipex.fdin != -1 && pipex.fdout != -1)
 	{
 		process_exec(&pipex, argv, env, argc - 3);

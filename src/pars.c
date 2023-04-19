@@ -6,12 +6,40 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:07:35 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/13 14:46:49 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/19 17:04:20 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 #include <stdio.h>
+
+void	end_process(t_pipex *pipex, pid_t pid)
+{
+	close(pipex->pipefd[0]);
+	close(pipex->pipefd[1]);
+	close(0);
+	if (pid != 0)
+	{
+		waitpid(pid -1, NULL, 0);
+		waitpid(pid, NULL, 0);
+	}
+}
+
+int	try_to_access(t_pipex *pipex, char **path_list, int i)
+{
+	char	*temp;
+
+	temp = ft_strjoin(path_list[i], "/");
+	pipex->path_cmd = ft_strjoin(temp, pipex->cmd[0]);
+	free(temp);
+	if (access(pipex->path_cmd, X_OK) == 0)
+	{
+		free_str(path_list);
+		return (0);
+	}
+	free(pipex->path_cmd);
+	return (1);
+}
 
 void	ft_exit(t_pipex *pipex)
 {

@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 13:20:04 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/13 13:54:02 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/19 16:47:05 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ typedef struct pipex
 void	setpath(t_pipex	*pipex, char **env);
 int		ft_checkfile(char **argv, int argc, t_pipex *pipex);
 
+int		try_to_access(t_pipex *pipex, char **path_list, int i);
+void	end_process(t_pipex *pipex, pid_t pid);
 void	ft_exit(t_pipex *pipex);
 
 #endif
