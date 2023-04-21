@@ -6,40 +6,36 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 12:20:00 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/19 17:04:01 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/21 17:02:09 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
-
-#include <stdio.h>
 
 int	get_path(char **env, char **argv, t_pipex *pipex, int j)
 {
 	char	**path_list;
 	int		i;
 
+	i = 0;
 	if (ft_strchr(argv[j], '/') != NULL || ft_strlen(argv[j]) == 0)
 	{
-		if (access(argv[j], X_OK) == 0)
+		set_absolute_path(pipex, argv[j]);
+		if (access(pipex->cmd[i], X_OK) == 0)
 			return (0);
+		free_str(pipex->cmd);
 		write(1, "pipex: command not found\n", 25);
 		return (2);
 	}
 	setpath(pipex, env);
 	path_list = ft_split(pipex->path, ':');
 	free(pipex->path);
-	i = 0;
 	pipex->cmd = ft_split(argv[j], ' ');
-	while (path_list[i])
-	{
+	while (path_list[i++])
 		if (try_to_access(pipex, path_list, i) == 0)
 			return (0);
-		i++;
-	}
 	write(1, "pipex: command not found\n", 25);
-	free_str(path_list);
-	return (1);
+	return (free_str(path_list), 1);
 }
 
 void	change_fd(t_pipex *pipex)
@@ -70,6 +66,8 @@ pid_t	child_process(t_pipex *pipex, char **env, int i)
 		else
 			change_fd(pipex);
 		execve(pipex->path_cmd, pipex->cmd, env);
+		free(pipex->path_cmd);
+		free_str(pipex->cmd);
 		exit(1);
 	}
 	free(pipex->path_cmd);
@@ -119,7 +117,7 @@ int	main(int argc, char **argv, char **env)
 		write(1, "pipex : input file invalid\n", 27);
 	if (pipex.fdout == -1)
 		write(1, "pipex : output file invalid\n", 28);
-	if (pipex.fdin != -1 && pipex.fdout != -1)
+	if (pipex.fdin != -1 || pipex.fdout != -1)
 	{
 		process_exec(&pipex, argv, env, argc - 3);
 		close(pipex.pipefd[0]);

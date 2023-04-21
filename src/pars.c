@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:07:35 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/19 17:04:20 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/21 17:06:36 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,21 @@ int	try_to_access(t_pipex *pipex, char **path_list, int i)
 	return (1);
 }
 
-void	ft_exit(t_pipex *pipex)
+void	set_absolute_path(t_pipex *pipex, char *arg)
 {
-	close(pipex->fdin);
-	close(pipex->fdout);
-	exit(0);
+	int		i;
+	char	**temp;
+
+	i = 0;
+	temp = ft_split(arg, ' ');
+	pipex->path_cmd = ft_strdup(temp[i]);
+	free_str(temp);
+	temp = ft_split(arg, '/');
+	while (temp[i])
+		i++;
+	i--;
+	pipex->cmd = ft_split(temp[i], ' ');
+	free_str(temp);
 }
 
 void	setpath(t_pipex	*pipex, char **env)
