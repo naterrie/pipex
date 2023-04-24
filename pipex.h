@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 13:20:04 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/21 17:02:01 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/24 11:36:53 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ typedef struct pipex
 }	t_pipex;
 
 void	setpath(t_pipex	*pipex, char **env);
-int		ft_checkfile(char **argv, int argc, t_pipex *pipex);
+int		check_space(char *str);
 
 int		try_to_access(t_pipex *pipex, char **path_list, int i);
 void	end_process(t_pipex *pipex, pid_t pid);
-void	set_absolute_path(t_pipex *pipex, char *arg);
+int		set_absolute_path(t_pipex *pipex, char *arg);
 
 #endif

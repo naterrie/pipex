@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:07:35 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/21 17:06:36 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/24 12:41:00 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	try_to_access(t_pipex *pipex, char **path_list, int i)
 	return (1);
 }
 
-void	set_absolute_path(t_pipex *pipex, char *arg)
+int	set_absolute_path(t_pipex *pipex, char *arg)
 {
 	int		i;
 	char	**temp;
@@ -56,6 +56,13 @@ void	set_absolute_path(t_pipex *pipex, char *arg)
 	i--;
 	pipex->cmd = ft_split(temp[i], ' ');
 	free_str(temp);
+	i = 0;
+	if (access(pipex->path_cmd, X_OK) == 0)
+		return (0);
+	free_str(pipex->cmd);
+	free(pipex->path_cmd);
+	write(1, "pipex: command not found\n", 25);
+	return (2);
 }
 
 void	setpath(t_pipex	*pipex, char **env)
@@ -76,9 +83,17 @@ void	setpath(t_pipex	*pipex, char **env)
 		exit(1);
 }
 
-int	ft_checkfile(char **argv, int argc, t_pipex *pipex)
+int	check_space(char *str)
 {
-	pipex->fdin = open(argv[1], O_RDONLY);
-	pipex->fdout = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	int	i;
+
+	i = 0;
+	while (str[i] == ' ')
+		i++;
+	if (str[i] == 0)
+	{
+		write(1, "pipex: command not found\n", 25);
+		return (1);
+	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 12:20:00 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/21 17:02:09 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/24 11:36:24 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,9 @@ int	get_path(char **env, char **argv, t_pipex *pipex, int j)
 
 	i = 0;
 	if (ft_strchr(argv[j], '/') != NULL || ft_strlen(argv[j]) == 0)
-	{
-		set_absolute_path(pipex, argv[j]);
-		if (access(pipex->cmd[i], X_OK) == 0)
-			return (0);
-		free_str(pipex->cmd);
-		write(1, "pipex: command not found\n", 25);
+		return (set_absolute_path(pipex, argv[j]));
+	if (check_space(argv[j]) == 1)
 		return (2);
-	}
 	setpath(pipex, env);
 	path_list = ft_split(pipex->path, ':');
 	free(pipex->path);
@@ -112,7 +107,8 @@ int	main(int argc, char **argv, char **env)
 		write (1, "pipex : wrong number of arguments\n", 35);
 		return (1);
 	}
-	ft_checkfile(argv, argc, &pipex);
+	pipex.fdin = open(argv[1], O_RDONLY);
+	pipex.fdout = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (pipex.fdin == -1)
 		write(1, "pipex : input file invalid\n", 27);
 	if (pipex.fdout == -1)
