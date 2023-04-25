@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 12:20:00 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/24 11:36:24 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/25 16:04:29 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ int	get_path(char **env, char **argv, t_pipex *pipex, int j)
 	int		i;
 
 	i = 0;
-	if (ft_strchr(argv[j], '/') != NULL || ft_strlen(argv[j]) == 0)
+	pipex->cmd = ft_split(argv[j], ' ');
+	if (ft_strchr(pipex->cmd[0], '/') != NULL || ft_strlen(argv[j]) == 0)
 		return (set_absolute_path(pipex, argv[j]));
 	if (check_space(argv[j]) == 1)
 		return (2);
 	setpath(pipex, env);
 	path_list = ft_split(pipex->path, ':');
 	free(pipex->path);
-	pipex->cmd = ft_split(argv[j], ' ');
 	while (path_list[i++])
 		if (try_to_access(pipex, path_list, i) == 0)
 			return (0);

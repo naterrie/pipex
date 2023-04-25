@@ -6,12 +6,11 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:07:35 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/24 12:41:00 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/25 16:20:48 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
-#include <stdio.h>
 
 void	end_process(t_pipex *pipex, pid_t pid)
 {
@@ -20,7 +19,7 @@ void	end_process(t_pipex *pipex, pid_t pid)
 	close(0);
 	if (pid != 0)
 	{
-		waitpid(pid -1, NULL, 0);
+		waitpid(pid - 1, NULL, 0);
 		waitpid(pid, NULL, 0);
 	}
 }
@@ -54,7 +53,6 @@ int	set_absolute_path(t_pipex *pipex, char *arg)
 	while (temp[i])
 		i++;
 	i--;
-	pipex->cmd = ft_split(temp[i], ' ');
 	free_str(temp);
 	i = 0;
 	if (access(pipex->path_cmd, X_OK) == 0)
