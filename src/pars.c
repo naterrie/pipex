@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:07:35 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/25 16:20:48 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/04/26 17:31:47 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	setpath(t_pipex	*pipex, char **env)
 		exit(1);
 }
 
-int	check_space(char *str)
+int	check_space(char *str, t_pipex *pipex)
 {
 	int	i;
 
@@ -91,6 +91,7 @@ int	check_space(char *str)
 	if (str[i] == 0)
 	{
 		write(1, "pipex: command not found\n", 25);
+		free_str(pipex->cmd);
 		return (1);
 	}
 	return (0);
