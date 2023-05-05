@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:07:35 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/26 17:31:47 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/05/05 13:56:39 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,10 @@ int	try_to_access(t_pipex *pipex, char **path_list, int i)
 
 	temp = ft_strjoin(path_list[i], "/");
 	pipex->path_cmd = ft_strjoin(temp, pipex->cmd[0]);
+	if (!pipex->path_cmd)
+		return (1);
 	free(temp);
-	if (access(pipex->path_cmd, X_OK) == 0)
+	if (access(pipex->path_cmd, F_OK | X_OK) == 0)
 	{
 		free_str(path_list);
 		return (0);

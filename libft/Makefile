@@ -6,15 +6,10 @@
 #    By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/25 14:37:56 by naterrie          #+#    #+#              #
-#    Updated: 2023/03/29 01:40:28 by naterrie         ###   ########lyon.fr    #
+#    Updated: 2023/05/05 14:18:26 by naterrie         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
-OBJS		= $(SRCS:.c=.o)
-
-OBJS_BONUS	= $(BONUS:.c=.o)
-
-HEADER = libft.h
 
 %.o: %.c
 		cc -I. -o $@ -c $? $(FLAGS)
@@ -62,10 +57,12 @@ SRCS	=	ft_isalpha.c \
 			ft_putchar_fd.c \
 			ft_putstr_fd.c \
 			ft_putendl_fd.c \
-			ft_putnbr_fd.c \
+			ft_putnbr_fd.c
 
+OBJS		= $(SRCS:.c=.o)
+OBJS_BONUS	= $(BONUS:.c=.o)
+HEADER = libft.h
 FLAGS	= -Wall -Wextra -Werror
-
 NAME	= libft.a
 
 all:	$(NAME)
@@ -73,7 +70,7 @@ all:	$(NAME)
 bonus: $(OBJS) $(OBJS_BONUS)
 	ar rcs $(NAME) $(OBJS) $(OBJS_BONUS)
 
-$(NAME):	$(OBJS) $(HEADER) Makefile
+$(NAME): $(OBJS) $(HEADER) Makefile
 	ar rcs $(NAME) $(OBJS)
 
 clean:
