@@ -53,7 +53,9 @@ Mkfile.old
 dkms.conf
 /.vscode/
 
-# Other files
+# Other files or Directories
+.objs
+libft/.objs
 *.txt
 in
 out
