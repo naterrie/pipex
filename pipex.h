@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 13:20:04 by naterrie          #+#    #+#             */
-/*   Updated: 2023/05/10 15:42:17 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/05/10 17:06:19 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct pipex
 
 void	setpath(t_pipex	*pipex, char **env);
 
+void	ft_exit(t_pipex *pipex);
 int		check_space(char *str, t_pipex *pipex);
 void	ft_dup(t_pipex *pipex, int fdin, int fdout);
 

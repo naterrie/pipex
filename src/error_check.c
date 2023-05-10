@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 15:22:39 by naterrie          #+#    #+#             */
-/*   Updated: 2023/05/10 15:44:33 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/05/10 17:06:27 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,15 @@ void	ft_dup(t_pipex *pipex, int fdin, int fdout)
 		free(pipex->path);
 	if (pipex->path_cmd != NULL)
 		free(pipex->path_cmd);
+	if (pipex->fdin != -1)
+		close(pipex->fdin);
+	if (pipex->fdout != -1)
+		close(pipex->fdout);
+	exit(1);
+}
+
+void	ft_exit(t_pipex *pipex)
+{
 	if (pipex->fdin != -1)
 		close(pipex->fdin);
 	if (pipex->fdout != -1)

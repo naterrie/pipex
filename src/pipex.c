@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 12:20:00 by naterrie          #+#    #+#             */
-/*   Updated: 2023/05/10 15:44:55 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/05/10 17:07:26 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	process_exec(t_pipex *pipex, char **args, char **env, int i)
 	j = 1;
 	pid = 0;
 	if (pipe(pipex->pipefd) == -1)
-		exit(1);
+		ft_exit(pipex);
 	if (pipex->fdin == -1)
 		i++;
 	else
@@ -104,15 +104,15 @@ int	main(int argc, char **argv, char **env)
 
 	if (argc != 5)
 	{
-		write (1, "pipex : wrong number of arguments\n", 35);
+		write (1, "pipex: wrong number of arguments\n", 34);
 		return (1);
 	}
 	pipex.fdin = open(argv[1], O_RDONLY);
 	pipex.fdout = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (pipex.fdin == -1)
-		write(1, "pipex : input file invalid\n", 27);
+		write(1, "pipex: input file invalid\n", 26);
 	if (pipex.fdout == -1)
-		write(1, "pipex : output file invalid\n", 28);
+		write(1, "pipex: output file invalid\n", 27);
 	if (pipex.fdin != -1 || pipex.fdout != -1)
 	{
 		process_exec(&pipex, argv, env, argc - 3);
