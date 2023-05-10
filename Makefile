@@ -6,7 +6,7 @@
 #    By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/06 13:19:29 by naterrie          #+#    #+#              #
-#    Updated: 2023/05/05 14:17:01 by naterrie         ###   ########lyon.fr    #
+#    Updated: 2023/05/10 14:50:17 by naterrie         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,8 @@ LST_LIBFT := libft.a
 OBJS =	$(addprefix $(DIR_OBJS)/, $(SRCS:.c=.o))
 LIBFT = $(addprefix $(DIR_LIBFT)/, $(LST_LIBFT))
 
+LIBFT_RE = libft/libft.h \
+			libft/Makefile \
 
 BLEU := \033[36m
 PURPLE := \033[35m
@@ -39,7 +41,7 @@ $(NAME): $(DIR_OBJS) $(OBJS) ${LIBFT}
 	gcc $(CFLAGS) -o $(NAME) $(OBJS) ${LIBFT}
 	echo "$(GREEN)✅ $(NAME) compilated !"
 
-$(DIR_OBJS)/%.o: $(DIR_SRCS)/%.c $(HEADERS)
+$(DIR_OBJS)/%.o: $(DIR_SRCS)/%.c $(HEADERS) Makefile | libft $(LIBFT)
 	echo "$(GREEN)⏳ Making $(NAME)"
 	printf "$(BLEU) ⮡ Making $(RESET)$@$(RED)"
 	cc $(CFLAGS) -c $< -o $@ -I.
@@ -49,21 +51,21 @@ $(DIR_OBJS)/%.o: $(DIR_SRCS)/%.c $(HEADERS)
 $(DIR_OBJS):
 	mkdir -p $@
 
-$(LIBFT):
-	echo "$(GREEN)⏳ Making LIBFT"
+$(LIBFT): force
 	make -C libft
-	printf "$(ERASE)"
-	echo "$(GREEN)✅ LIBFT compilated !"
+
+force :
 
 clean:
-	echo "$(PURPLE)🧹Removing .o files !"
+	echo "$(PURPLE)🧹Removing pipex.o files !"
 	rm -rf $(DIR_OBJS)
 	make -C libft clean
 
 fclean: clean
 	echo "$(PURPLE)🧹Removing $(NAME:.a=) !"
 	rm -f $(NAME)
-	make -C libft fclean
+	rm -rf libft/libft.a
+	echo "$(PURPLE)🧹Removing libft.a !"
 
 re: fclean $(NAME)
 

@@ -6,13 +6,9 @@
 #    By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/25 14:37:56 by naterrie          #+#    #+#              #
-#    Updated: 2023/05/05 14:18:26 by naterrie         ###   ########lyon.fr    #
+#    Updated: 2023/05/10 14:51:29 by naterrie         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
-
-
-%.o: %.c
-		cc -I. -o $@ -c $? $(FLAGS)
 
 BONUS	=	ft_lstnew.c \
 			ft_lstadd_front.c \
@@ -59,28 +55,57 @@ SRCS	=	ft_isalpha.c \
 			ft_putendl_fd.c \
 			ft_putnbr_fd.c
 
-OBJS		= $(SRCS:.c=.o)
-OBJS_BONUS	= $(BONUS:.c=.o)
+OBJS		= $(addprefix $(DIR_OBJS)/, $(SRCS:.c=.o))
+
+OBJS_BONUS	= $(addprefix $(DIR_OBJS)/, $(BONUS:.c=.o)) \
+				$(addprefix $(DIR_OBJS)/, $(SRCS:.c=.o))
+
 HEADER = libft.h
+DIR_SRCS = src
 FLAGS	= -Wall -Wextra -Werror
+DIR_OBJS = .objs
 NAME	= libft.a
 
+BLEU := \033[36m
+PURPLE := \033[35m
+GREEN := \033[32m
+RED := \033[31m
+RESET := \033[0m
+ERASE := \033[2K\033[1A\r
+
 all:	$(NAME)
+		echo "$(GREEN)✅ libft compilated !"
 
 bonus: $(OBJS) $(OBJS_BONUS)
+	echo "$(GREEN)⏳ Making Bonus $(NAME)"
 	ar rcs $(NAME) $(OBJS) $(OBJS_BONUS)
+	printf "$(ERASE)"
+	echo "$(GREEN)✅ Libft Bonus compilated !"
 
-$(NAME): $(OBJS) $(HEADER) Makefile
+$(NAME): $(DIR_OBJS) $(OBJS)
+	echo "$(GREEN)⏳ Making libft"
 	ar rcs $(NAME) $(OBJS)
+	printf "$(ERASE)"
+
+$(DIR_OBJS)/%.o: $(DIR_SRCS)/%.c $(HEADER) Makefile
+	echo "$(GREEN)⏳ Making $(NAME)"
+	printf "$(BLEU) ⮡ Making $(RESET)$@$(RED)"
+	cc $(CFLAGS) -c $< -o $@
+	printf "$(ERASE)"
+
+$(DIR_OBJS):
+	mkdir -p $@
 
 clean:
-	rm -f $(OBJS) $(OBJS_BONUS)
+	rm -rf .objs
+	echo "$(PURPLE)🧹Removing libft.o files !"
 
 fclean:	clean
 	rm -f $(NAME)
-
+	echo "$(PURPLE)🧹Removing $(NAME:.a=) !"
 re:	fclean $(NAME)
 
 .PHONY:	all clean fclean re bonus
 
 .SILENT:
+
