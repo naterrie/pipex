@@ -6,7 +6,7 @@
 #    By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/25 14:37:56 by naterrie          #+#    #+#              #
-#    Updated: 2023/05/10 14:51:29 by naterrie         ###   ########lyon.fr    #
+#    Updated: 2023/05/10 17:17:26 by naterrie         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,7 +74,6 @@ RESET := \033[0m
 ERASE := \033[2K\033[1A\r
 
 all:	$(NAME)
-		echo "$(GREEN)✅ libft compilated !"
 
 bonus: $(OBJS) $(OBJS_BONUS)
 	echo "$(GREEN)⏳ Making Bonus $(NAME)"
@@ -86,6 +85,7 @@ $(NAME): $(DIR_OBJS) $(OBJS)
 	echo "$(GREEN)⏳ Making libft"
 	ar rcs $(NAME) $(OBJS)
 	printf "$(ERASE)"
+	echo "$(GREEN)✅ libft compilated !"
 
 $(DIR_OBJS)/%.o: $(DIR_SRCS)/%.c $(HEADER) Makefile
 	echo "$(GREEN)⏳ Making $(NAME)"
