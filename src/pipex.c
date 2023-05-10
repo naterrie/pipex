@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 12:20:00 by naterrie          #+#    #+#             */
-/*   Updated: 2023/04/26 17:30:52 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/05/10 15:44:55 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ int	get_path(char **env, char **argv, t_pipex *pipex, int j)
 void	change_fd(t_pipex *pipex)
 {
 	close(pipex->pipefd[1]);
-	dup2(pipex->pipefd[0], 0);
+	ft_dup(pipex, pipex->pipefd[0], 0);
 	close(pipex->pipefd[0]);
-	dup2(pipex->fdout, 1);
+	ft_dup(pipex, pipex->fdout, 1);
 	if (pipex->fdout != 1)
 		close(pipex->fdout);
 }
@@ -55,7 +55,7 @@ pid_t	child_process(t_pipex *pipex, char **env, int i)
 		if (i == 2)
 		{
 			close(pipex->pipefd[0]);
-			dup2(pipex->pipefd[1], 1);
+			ft_dup(pipex, pipex->pipefd[1], 1);
 			close(pipex->pipefd[1]);
 		}
 		else
@@ -79,11 +79,11 @@ void	process_exec(t_pipex *pipex, char **args, char **env, int i)
 	j = 1;
 	pid = 0;
 	if (pipe(pipex->pipefd) == -1)
-		exit(0);
+		exit(1);
 	if (pipex->fdin == -1)
 		i++;
 	else
-		dup2(pipex->fdin, 0);
+		ft_dup(pipex, pipex->fdin, 0);
 	if (pipex->fdout == -1)
 		j++;
 	while (args[i + j])

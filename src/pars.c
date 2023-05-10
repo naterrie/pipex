@@ -6,23 +6,11 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:07:35 by naterrie          #+#    #+#             */
-/*   Updated: 2023/05/05 13:56:39 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/05/10 15:41:27 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
-
-void	end_process(t_pipex *pipex, pid_t pid)
-{
-	close(pipex->pipefd[0]);
-	close(pipex->pipefd[1]);
-	close(0);
-	if (pid != 0)
-	{
-		waitpid(pid - 1, NULL, 0);
-		waitpid(pid, NULL, 0);
-	}
-}
 
 int	try_to_access(t_pipex *pipex, char **path_list, int i)
 {
@@ -81,20 +69,4 @@ void	setpath(t_pipex	*pipex, char **env)
 	}
 	if (!env[i])
 		exit(1);
-}
-
-int	check_space(char *str, t_pipex *pipex)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] == ' ')
-		i++;
-	if (str[i] == 0)
-	{
-		write(1, "pipex: command not found\n", 25);
-		free_str(pipex->cmd);
-		return (1);
-	}
-	return (0);
 }

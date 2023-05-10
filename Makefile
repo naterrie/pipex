@@ -6,7 +6,7 @@
 #    By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/06 13:19:29 by naterrie          #+#    #+#              #
-#    Updated: 2023/05/10 14:50:17 by naterrie         ###   ########lyon.fr    #
+#    Updated: 2023/05/10 15:42:02 by naterrie         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,8 @@ RESET := \033[0m
 ERASE := \033[2K\033[1A\r
 
 SRCS =	pipex.c \
-		pars.c
+		pars.c \
+		error_check.c
 
 all: $(NAME)
 
