@@ -6,7 +6,7 @@
 #    By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/06 13:19:29 by naterrie          #+#    #+#              #
-#    Updated: 2023/05/10 15:42:02 by naterrie         ###   ########lyon.fr    #
+#    Updated: 2023/05/11 14:35:45 by naterrie         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ SRCS =	pipex.c \
 all: $(NAME)
 
 $(NAME): $(DIR_OBJS) $(OBJS) ${LIBFT}
-	gcc $(CFLAGS) -o $(NAME) $(OBJS) ${LIBFT}
+	cc $(CFLAGS) -o $(NAME) $(OBJS) ${LIBFT}
 	echo "$(GREEN)✅ $(NAME) compilated !"
 
 $(DIR_OBJS)/%.o: $(DIR_SRCS)/%.c $(HEADERS) Makefile | libft $(LIBFT)
