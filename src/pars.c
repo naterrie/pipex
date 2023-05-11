@@ -6,7 +6,7 @@
 /*   By: naterrie <naterrie@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:07:35 by naterrie          #+#    #+#             */
-/*   Updated: 2023/05/10 15:41:27 by naterrie         ###   ########lyon.fr   */
+/*   Updated: 2023/05/11 14:28:00 by naterrie         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	try_to_access(t_pipex *pipex, char **path_list, int i)
 	char	*temp;
 
 	temp = ft_strjoin(path_list[i], "/");
+	if (temp == NULL)
+		return (1);
 	pipex->path_cmd = ft_strjoin(temp, pipex->cmd[0]);
 	if (!pipex->path_cmd)
 		return (1);
@@ -37,9 +39,15 @@ int	set_absolute_path(t_pipex *pipex, char *arg)
 
 	i = 0;
 	temp = ft_split(arg, ' ');
+	if (temp == NULL)
+		return (1);
 	pipex->path_cmd = ft_strdup(temp[i]);
+	if (pipex->path_cmd == NULL)
+		return (free_str(temp), 1);
 	free_str(temp);
 	temp = ft_split(arg, '/');
+	if (temp == NULL)
+		return (free(pipex->path_cmd), 1);
 	while (temp[i])
 		i++;
 	i--;
@@ -63,10 +71,18 @@ void	setpath(t_pipex	*pipex, char **env)
 		if (ft_strlen(env[i]) >= 5 && ft_strncmp(env[i], "PATH=", 5) == 0)
 		{
 			pipex->path = ft_substr(env[i], 5, ft_strlen(env[i]));
+			if (pipex->path == NULL)
+			{
+				free_str(pipex->cmd);
+				ft_exit(pipex);
+			}
 			return ;
 		}
 		i++;
 	}
 	if (!env[i])
-		exit(1);
+	{
+		free_str(pipex->cmd);
+		ft_exit(pipex);
+	}
 }
